@@ -1,12 +1,24 @@
 class Puzzle {
-	constructor({ image = "dali.jpg", columns = 4, rows = 4, emptyX = 0, emptyY = 0 }) {
+	constructor(config) {
+		this.canvas = document.querySelector(".game-window");
+		this.ctx = this.canvas.getContext("2d");
+
+		document.addEventListener('keydown', e => this.onKeyDown(e));
+		this.canvas.addEventListener('click', e => this.onClick(e));
+		this.canvas.addEventListener('contextmenu', e => {
+			e.preventDefault();
+			this.onClick(e);
+		});
+
+		this.newGame(config);
+	}
+
+	newGame({ image = "blank.jpg", columns = 4, rows = 4, emptyX = 0, emptyY = 0 }) {
 		this.image = new Image();
 		this.image.onload = () => {
 			this.width = this.image.width;
 			this.height = this.image.height;
 
-			this.canvas = document.querySelector(".game-window");
-			this.ctx = this.canvas.getContext("2d");
 			this.canvas.setAttribute('width', this.width);
 			this.canvas.setAttribute('height', this.height);
 			this.canvas.rect = this.canvas.getBoundingClientRect();
@@ -25,16 +37,9 @@ class Puzzle {
 				}
 			}
 
-			document.addEventListener('keydown', e => this.onKeyDown(e));
-			this.canvas.addEventListener('click', e => this.onClick(e));
-			this.canvas.addEventListener('contextmenu', e => {
-				e.preventDefault();
-				this.onClick(e);
-			});
-
 			this.startGame();
 		}
-		this.image.src = image;	
+		this.image.src = image;
 	}
 
 	onClick(e) {
@@ -174,14 +179,14 @@ class Puzzle {
 }
 
 const config1 = {
-	image: "dali.jpg",
-	columns: 3, rows: 4,
+	image: "dali1.jpg",
+	columns: 3, rows: 3,
 	emptyX: 2, emptyY: 0,
 };
 
 const config2 = {
 	image: "dali2.jpg",
-	columns: 3, rows: 3,
+	columns: 3, rows: 4,
 	emptyX: 2, emptyY: 0,
 };
 
@@ -191,4 +196,15 @@ const config3 = {
 	emptyX: 3, emptyY: 0,
 };
 
-const puzzle = new Puzzle(config3);
+let puzzle = new Puzzle(config2);
+
+const btns = document.querySelectorAll(".menu-btn");
+btns.forEach(btn => {	
+	btn.onclick = () => {
+		if (!puzzle.emptyTile || window.confirm("Are you sure you want to start a new game?")) {
+			if (btn.name === "easy") puzzle.newGame(config1);
+			else if (btn.name === "medium") puzzle.newGame(config2);
+			else if (btn.name === "hard") puzzle.newGame(config3);
+		}
+	}
+});

@@ -7,10 +7,21 @@
 body {
 	min-height: 100vh;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
 
 .game-window {
 	border: 1px solid #000;
+}
+
+.menu-btns {
+	margin: 2em;
+}
+
+.menu-btn {
+	margin: 0.5em;
+	padding: 0.5em;
+	font-size: 1.5rem;
 }
