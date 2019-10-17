@@ -21,7 +21,6 @@ class Puzzle {
 
 			this.canvas.setAttribute('width', this.width);
 			this.canvas.setAttribute('height', this.height);
-			this.canvas.rect = this.canvas.getBoundingClientRect();
 
 			this.columns = columns;
 			this.rows = rows;
@@ -45,8 +44,9 @@ class Puzzle {
 	onClick(e) {
 		if (!this.emptyTile) return;
 
-		const x = Math.floor((e.x - this.canvas.rect.left) / this.tileWidth);
-		const y = Math.floor((e.y - this.canvas.rect.top) / this.tileHeight);
+		const { left, top } = this.canvas.getBoundingClientRect();
+		const x = Math.floor((e.x - left) / this.tileWidth);
+		const y = Math.floor((e.y - top) / this.tileHeight);
 		this.makeMove(x, y);
 	}
 	
@@ -202,6 +202,10 @@ const btns = document.querySelectorAll(".menu-btn");
 btns.forEach(btn => {	
 	btn.onclick = () => {
 		if (!puzzle.emptyTile || window.confirm("Are you sure you want to start a new game?")) {
+			const activeBtn = document.querySelector(".menu-btn--active");
+			activeBtn.classList.remove("menu-btn--active");
+			btn.classList.add("menu-btn--active");
+			
 			if (btn.name === "easy") puzzle.newGame(config1);
 			else if (btn.name === "medium") puzzle.newGame(config2);
 			else if (btn.name === "hard") puzzle.newGame(config3);
