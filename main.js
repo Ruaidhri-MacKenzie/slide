@@ -4,11 +4,15 @@ class Puzzle {
 		this.ctx = this.canvas.getContext("2d");
 
 		document.addEventListener('keydown', e => this.onKeyDown(e));
+		this.canvas.addEventListener('touchstart', e => this.onTouchStart(e));
+		this.canvas.addEventListener('touchend', e => this.onTouchEnd(e));
 		this.canvas.addEventListener('click', e => this.onClick(e));
 		this.canvas.addEventListener('contextmenu', e => {
 			e.preventDefault();
 			this.onClick(e);
 		});
+		this.dragX = null;
+		this.dragY = null;
 
 		this.newGame(config);
 	}
@@ -50,6 +54,40 @@ class Puzzle {
 		this.makeMove(x, y);
 	}
 	
+	onTouchStart(e) {
+		if (!this.emptyTile) return;
+		const touch = e.touches[0];
+		this.dragX = touch.pageX;
+		this.dragY = touch.pageY;
+	}
+	onTouchEnd(e) {
+		if (!this.emptyTile) return;
+		
+		const touch = e.changedTouches[0];
+		const diffX = Math.abs(touch.pageX - this.dragX);
+		const diffY = Math.abs(touch.pageY - this.dragY);
+
+		if (diffX > diffY) {
+			if (touch.pageX < this.dragX) {
+				// Swipe Left
+				this.makeMove(this.emptyTile.x + 1, this.emptyTile.y);
+			}
+			else {
+				// Swipe Right
+				this.makeMove(this.emptyTile.x - 1, this.emptyTile.y);
+			}
+		}
+		else {
+			if (touch.pageY < this.dragY) {
+				// Swipe Up
+				this.makeMove(this.emptyTile.x, this.emptyTile.y + 1);
+			}
+			else {
+				// Swipe Down
+				this.makeMove(this.emptyTile.x, this.emptyTile.y - 1);
+			}
+		}
+	}
 	onKeyDown(e) {
 		if (!this.emptyTile) return;
 
