@@ -55,6 +55,7 @@ class Puzzle {
 	}
 	
 	onTouchStart(e) {
+		e.preventDefault();
 		if (!this.emptyTile) return;
 		const touch = e.touches[0];
 		this.dragX = touch.pageX;
