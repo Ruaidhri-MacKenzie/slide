@@ -5,6 +5,7 @@ class Puzzle {
 
 		document.addEventListener('keydown', e => this.onKeyDown(e));
 		this.canvas.addEventListener('touchstart', e => this.onTouchStart(e));
+		this.canvas.addEventListener('touchmove', e => e.preventDefault());
 		this.canvas.addEventListener('touchend', e => this.onTouchEnd(e));
 		this.canvas.addEventListener('click', e => this.onClick(e));
 		this.canvas.addEventListener('contextmenu', e => {
@@ -62,6 +63,7 @@ class Puzzle {
 		this.dragY = touch.pageY;
 	}
 	onTouchEnd(e) {
+		e.preventDefault();
 		if (!this.emptyTile) return;
 		
 		const touch = e.changedTouches[0];
